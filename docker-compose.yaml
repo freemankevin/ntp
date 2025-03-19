@@ -7,9 +7,10 @@ services:
     restart: unless-stopped
     ports:
       - "123:123/udp"
+    volumes:
+      - ./conf/chrony.conf:/etc/chrony/chrony.conf:ro
     environment:
       - TZ=Asia/Shanghai
-      - NTP_SERVERS="ntp1.aliyun.com ntp2.aliyun.com ntp3.aliyun.com"
     healthcheck:
       test: ["CMD", "chronyc", "tracking"]
       interval: 30s
