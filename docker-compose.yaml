@@ -1,0 +1,27 @@
+# version: '3.8'
+
+services:
+  chrony:
+    image: ghcr.io/freemankevin/chrony-amd64:latest
+    container_name: chrony-server
+    restart: unless-stopped
+    ports:
+      - "123:123/udp"
+    volumes:
+      - /data/chrony:/etc/chrony
+    environment:
+      - TZ=Asia/Shanghai
+      - NTP_SERVERS="ntp1.aliyun.com ntp2.aliyun.com ntp3.aliyun.com"
+    healthcheck:
+      test: ["CMD", "chronyc", "tracking"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    cap_add:
+      - SYS_TIME
+    command: >
+      -d -f /etc/chrony/chrony.conf
+
+networks:
+  default:
+    driver: bridge
