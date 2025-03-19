@@ -27,36 +27,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push AMD64 image
+      - name: Build and push multi-arch image
         uses: docker/build-push-action@v6
         with:
           context: .
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/freemankevin/chrony-amd64:latest
-            ghcr.io/freemankevin/chrony-amd64:${{ github.sha }}
-
-      - name: Build and push ARM64 image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/arm64
-          push: true
-          tags: |
-            ghcr.io/freemankevin/chrony-arm64:latest
-            ghcr.io/freemankevin/chrony-arm64:${{ github.sha }}
-
-      - name: Create and push multi-arch manifest
-        run: |
-          docker buildx imagetools create \
-            --tag ghcr.io/freemankevin/chrony:latest \
-            ghcr.io/freemankevin/chrony-amd64:latest \
-            ghcr.io/freemankevin/chrony-arm64:latest
+            ghcr.io/freemankevin/chrony:latest
+            ghcr.io/freemankevin/chrony:${{ github.sha }}
 
       - name: Verify Tags
         run: |
           echo "Checking tags in GHCR..."
-          docker manifest inspect ghcr.io/freemankevin/chrony-amd64:latest || echo "Tag chrony-amd64:latest not found"
-          docker manifest inspect ghcr.io/freemankevin/chrony-arm64:latest || echo "Tag chrony-arm64:latest not found"
           docker manifest inspect ghcr.io/freemankevin/chrony:latest || echo "Tag chrony:latest not found"
