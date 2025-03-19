@@ -34,7 +34,6 @@ jobs:
           push: true
           tags: |
             ghcr.io/freemankevin/chrony-amd64:latest
-            ghcr.io/freemankevin/chrony-amd64:${{ github.sha }}
 
       - name: Build and push ARM64 image
         uses: docker/build-push-action@v4
@@ -44,4 +43,3 @@ jobs:
           push: true
           tags: |
             ghcr.io/freemankevin/chrony-arm64:latest
-            ghcr.io/freemankevin/chrony-arm64:${{ github.sha }}
